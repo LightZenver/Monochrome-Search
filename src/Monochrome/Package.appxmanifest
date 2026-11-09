@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  IgnorableNamespaces="uap mp">
+
+  <Identity
+    Name="LightZenver.MonochromeSearch"
+    Publisher="CN=Monochrome"
+    Version="1.0.0.0" />
+
+  <mp:PhoneIdentity PhoneProductId="e35c0f5a-4e71-4b9d-a1c2-5a2d7f9b6103" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
+
+  <Properties>
+    <DisplayName>Monochrome</DisplayName>
+    <PublisherDisplayName>LightZenver</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+    <Description>Монохромный браузер для Windows 10 Mobile с режимом совместимости для современных сайтов.</Description>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.10240.0" MaxVersionTested="10.0.19041.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="ru-RU" />
+  </Resources>
+
+  <Applications>
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="Monochrome.App">
+      <uap:VisualElements
+        DisplayName="Monochrome"
+        Square150x150Logo="Assets\Square150x150Logo.png"
+        Square44x44Logo="Assets\Square44x44Logo.png"
+        Wide310x150Logo="Assets\Wide310x150Logo.png"
+        Description="Монохромный браузер для Lumia"
+        BackgroundColor="#ffffff"
+        ForegroundText="dark">
+        <uap:LockScreen BadgeLogo="Assets\BadgeLogo.png" Notification="badge" />
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png">
+          <uap:ShowNameOnTiles>
+            <uap:ShowOn Name="square150x150Logo" />
+            <uap:ShowOn Name="wide310x150Logo" />
+          </uap:ShowNameOnTiles>
+        </uap:DefaultTile>
+        <uap:SplashScreen uap:Image="Assets\SplashScreen.png" BackgroundColor="#ffffff" />
+      </uap:VisualElements>
+    </Application>
+  </Applications>
+
+  <Capabilities>
+    <Capability Name="internetClient" />
+  </Capabilities>
+</Package>

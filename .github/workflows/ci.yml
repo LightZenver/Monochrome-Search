@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Сборка UWP (ARM, sideload)
+    runs-on: windows-2022
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Сборка и упаковка
+        env:
+          MONO_SIGN_PFX_B64: ${{ secrets.MONO_SIGN_PFX_B64 }}
+          MONO_SIGN_PASS: ${{ secrets.MONO_SIGN_PASS }}
+        shell: pwsh
+        run: ./scripts/package.ps1 -Configuration Release -Platform ARM -OutDir out
+
+      - name: Артефакт .appx
+        uses: actions/upload-artifact@v4
+        with:
+          name: monochrome-nightly
+          path: ./out/release/*
+          if-no-files-found: error

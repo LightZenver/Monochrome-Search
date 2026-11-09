@@ -1,0 +1,94 @@
+<Page
+    x:Class="Monochrome.Pages.BrowsePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{StaticResource MonoBg}">
+
+    <Page.Resources>
+        <Style x:Key="NoBrBtn" TargetType="Button">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="12,8" />
+        </Style>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Верхняя панель адресной строки в стиле «pill» -->
+        <Border Grid.Row="0" Background="{StaticResource MonoSurfaceBr}" BorderBrush="{StaticResource MonoLineBr}" BorderThickness="0,0,0,1" Padding="10,8">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Button x:Name="BtnBack" Grid.Column="0" Style="{StaticResource NoBrBtn}" Click="OnWebBack" Foreground="{StaticResource MonoFgBr}">
+                    <TextBlock Text="&#xE72B;" FontFamily="Segoe MDL2 Assets" FontSize="16" />
+                </Button>
+
+                <Border Grid.Column="1" Background="#161616" BorderBrush="{StaticResource MonoLineBr}" BorderThickness="1" CornerRadius="20" MinHeight="40">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock x:Name="TxtLock" Grid.Column="0" Text="&#xE72E;" FontFamily="Segoe MDL2 Assets" FontSize="13" Foreground="{StaticResource MonoMutBr}" VerticalAlignment="Center" Margin="12,0,2,0" />
+                        <TextBox
+                            x:Name="AddressBox"
+                            Grid.Column="1"
+                            BorderThickness="0"
+                            Background="Transparent"
+                            VerticalContentAlignment="Center"
+                            FontSize="14"
+                            Foreground="{StaticResource MonoFgBr}"
+                            Margin="0"
+                            KeyDown="OnAddressKeyDown"
+                            LostFocus="OnAddressLostFocus" />
+                        <TextBlock x:Name="TxtGateway" Grid.Column="2" Text="GW" FontSize="9" FontWeight="Bold" Foreground="{StaticResource MonoFgBr}"
+                                   Margin="0,0,4,0" VerticalAlignment="Center" Visibility="Collapsed" />
+                        <Button Grid.Column="3" Style="{StaticResource NoBrBtn}" Click="OnRefresh" Padding="8,6" Foreground="{StaticResource MonoMutBr}">
+                            <TextBlock Text="&#xE72C;" FontFamily="Segoe MDL2 Assets" FontSize="14" />
+                        </Button>
+                    </Grid>
+                </Border>
+
+                <Button Grid.Column="3" Style="{StaticResource NoBrBtn}" Click="OnHomeClick" Foreground="{StaticResource MonoFgBr}">
+                    <TextBlock Text="&#xE80F;" FontFamily="Segoe MDL2 Assets" FontSize="16" />
+                </Button>
+            </Grid>
+        </Border>
+
+        <ProgressBar Grid.Row="1" x:Name="Progress" IsIndeterminate="True" Visibility="Collapsed" Height="2" Foreground="#f2f2f2" Background="Transparent" />
+
+        <!-- Страница просмотра -->
+        <Grid Grid.Row="2" x:Name="WebHost">
+            <WebView x:Name="Web"
+                     NavigationStarting="OnNavStarting"
+                     ContentLoading="OnContentLoading"
+                     NavigationCompleted="OnNavCompleted"
+                     NavigationFailed="OnNavFailed"
+                     UnsupportedUriSchemeIdentified="OnUnsupportedScheme" />
+        </Grid>
+
+        <Grid Grid.Row="2" x:Name="HostError" Visibility="Collapsed">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="28">
+                <TextBlock Text="&#xE783;" FontFamily="Segoe MDL2 Assets" FontSize="42" Foreground="{StaticResource MonoMutBr}" HorizontalAlignment="Center" />
+                <TextBlock x:Name="ErrTitle" FontSize="18" Foreground="{StaticResource MonoFgBr}" HorizontalAlignment="Center" Margin="0,12,0,4" Text="Страница не открывается" />
+                <TextBlock x:Name="ErrSub" FontSize="13" Foreground="{StaticResource MonoMutBr}" HorizontalAlignment="Center" TextAlignment="Center" Margin="0,0,0,18" Text="Сайт или соединение недоступны. Попробуйте включить режим Gateway в настройках." />
+                <Button HorizontalAlignment="Center" Style="{StaticResource NoBrBtn}" Background="#f2f2f2" Foreground="#000000" Padding="16,10" Click="OnRetry" Content="Повторить" />
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Page>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Режимы отражения по умолчанию для .NET Native.
+    Оставляем минимум: сериализация состояния (DataContractJsonSerializer)
+    и привязка XAML работают стандартно.
+-->
+<Directives xmlns="http://schemas.microsoft.com/netfx/2013/rd/metadata">
+  <Application>
+    <Assembly Name="*Application" Dynamic="Required All" />
+    <Assembly Name="Microsoft.CSharp" Dynamic="Required All" />
+  </Application>
+</Directives>

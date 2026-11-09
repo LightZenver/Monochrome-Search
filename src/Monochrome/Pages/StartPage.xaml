@@ -1,0 +1,190 @@
+<Page
+    x:Class="Monochrome.Pages.StartPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{StaticResource MonoBg}"
+    Loaded="OnLoaded">
+
+    <Page.Resources>
+        <Style x:Key="NoBrBtn" TargetType="Button">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="12,8" />
+        </Style>
+
+        <ControlTemplate x:Key="MonoTextBox" TargetType="TextBox">
+            <Grid>
+                <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="0" />
+                <ScrollViewer x:Name="ContentElement" Margin="{TemplateBinding BorderThickness}" HorizontalAlignment="Left" VerticalAlignment="Center" />
+            </Grid>
+        </ControlTemplate>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Центр: логотип, заголовок, поиск -->
+        <ScrollViewer Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" MaxHeight="700">
+            <StackPanel HorizontalAlignment="Center" Margin="24,0" MaxWidth="480">
+                <Border
+                    Width="92" Height="92"
+                    BorderThickness="1.5"
+                    BorderBrush="{StaticResource MonoFgBr}"
+                    CornerRadius="24"
+                    HorizontalAlignment="Center">
+                    <Image Source="ms-appx:///Assets/Square150x150Logo.png" Margin="10" />
+                </Border>
+
+                <TextBlock TextAlignment="Center" Margin="0,22,0,0" Foreground="{StaticResource MonoFgBr}">
+                    <Run Text="MONO" FontWeight="Bold" FontSize="25" /><Run Text="CHROME" FontWeight="Light" FontSize="25" />
+                </TextBlock>
+                <TextBlock
+                    Text="SEARCH"
+                    FontSize="12"
+                    Foreground="{StaticResource MonoMutBr}"
+                    CharacterSpacing="320"
+                    TextAlignment="Center" />
+
+                <Border Margin="0,26,0,0" Background="#141414" BorderBrush="{StaticResource MonoLineBr}" BorderThickness="1" CornerRadius="27">
+                    <Grid Height="54">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="&#xE721;" FontFamily="Segoe MDL2 Assets" FontSize="17" Foreground="{StaticResource MonoMutBr}" VerticalAlignment="Center" Margin="16,0,0,0" />
+                        <TextBox
+                            x:Name="HomeQuery"
+                            Grid.Column="1"
+                            Margin="4,0"
+                            BorderThickness="0"
+                            Background="Transparent"
+                            PlaceholderText="Поиск или адрес сайта"
+                            FontSize="15"
+                            TextAlignment="Left"
+                            Foreground="{StaticResource MonoFgBr}"
+                            KeyDown="OnQueryKeyDown" />
+                        <Button Grid.Column="2" Style="{StaticResource NoBrBtn}" Click="OnSearchGo" Background="Transparent">
+                            <TextBlock Text="&#xE72A;" FontFamily="Segoe MDL2 Assets" FontSize="15" Foreground="{StaticResource MonoMutBr}" />
+                        </Button>
+                    </Grid>
+                </Border>
+
+                <ItemsControl x:Name="Shortcuts" Margin="0,30,0,0" HorizontalAlignment="Center">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapGrid MaximumRowsOrColumns="4" Orientation="Horizontal" HorizontalAlignment="Center" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Click="OnShortcutClick" Style="{StaticResource NoBrBtn}" Margin="0,6" Background="Transparent" BorderThickness="0">
+                                <StackPanel Width="82">
+                                    <Border
+                                        Width="54" Height="54"
+                                        CornerRadius="18"
+                                        BorderThickness="1"
+                                        BorderBrush="{StaticResource MonoLineBr}"
+                                        Background="#141414">
+                                        <TextBlock Text="{Binding Letter}" FontSize="19" FontWeight="Bold" Foreground="{StaticResource MonoFgBr}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Border>
+                                    <TextBlock Text="{Binding Title}" FontSize="11" Foreground="{StaticResource MonoMutBr}" TextTrimming="CharacterEllipsis" Margin="0,8,0,0" TextAlignment="Center" />
+                                </StackPanel>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Нижняя навигация -->
+        <Border Grid.Row="1" Background="{StaticResource MonoSurfaceBr}" BorderBrush="{StaticResource MonoLineBr}" BorderThickness="0,1,0,0">
+            <Grid Height="58">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Style="{StaticResource NoBrBtn}"
+                        Foreground="{StaticResource MonoMutBr}" Click="OnHistoryClick">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="&#xE81C;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Center" FontSize="17" />
+                        <TextBlock Text="История" FontSize="11" />
+                    </StackPanel>
+                </Button>
+                <Button Grid.Column="1" Style="{StaticResource NoBrBtn}"
+                        Foreground="{StaticResource MonoMutBr}" Click="OnBookmarksClick">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="&#xE735;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Center" FontSize="17" />
+                        <TextBlock Text="Закладки" FontSize="11" />
+                    </StackPanel>
+                </Button>
+                <Button Grid.Column="2" Style="{StaticResource NoBrBtn}"
+                        Foreground="{StaticResource MonoMutBr}" Click="OnSettingsClick">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="&#xE713;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Center" FontSize="17" />
+                        <TextBlock Text="Настройки" FontSize="11" />
+                    </StackPanel>
+                </Button>
+            </Grid>
+        </Border>
+
+        <!-- Боттом-лист (история / закладки / настройки) -->
+        <Grid x:Name="SheetRoot" Grid.Row="0" Grid.RowSpan="2" Visibility="Collapsed" Tapped="OnSheetBackdrop">
+            <Grid.Background>
+                <SolidColorBrush Color="#AA000000" />
+            </Grid.Background>
+            <Border
+                VerticalAlignment="Bottom"
+                Background="{StaticResource MonoSurfaceBr}"
+                BorderBrush="{StaticResource MonoLineBr}"
+                BorderThickness="0,1,0,0"
+                CornerRadius="20,20,0,0">
+                <Grid Margin="14,10,14,16" MinHeight="320" MaxHeight="420">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0" Margin="0,4,0,10">
+                        <TextBlock x:Name="SheetTitle" FontSize="17" Foreground="{StaticResource MonoFgBr}" />
+                        <Button x:Name="SheetClear" HorizontalAlignment="Right" Style="{StaticResource NoBrBtn}"
+                                Foreground="{StaticResource MonoMutBr}" Click="OnClearList">
+                            <TextBlock Text="Очистить" FontSize="13" />
+                        </Button>
+                    </Grid>
+
+                    <ScrollViewer Grid.Row="1">
+                        <ItemsControl x:Name="SheetList">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid HorizontalAlignment="Stretch" Margin="0,2">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Button Click="OnRowClick" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Style="{StaticResource NoBrBtn}" Grid.Column="0">
+                                            <StackPanel HorizontalAlignment="Left">
+                                                <TextBlock Text="{Binding Title}" Foreground="{StaticResource MonoFgBr}" FontSize="15" TextTrimming="CharacterEllipsis" />
+                                                <TextBlock Text="{Binding Sub}" Foreground="{StaticResource MonoMutBr}" FontSize="12" TextTrimming="CharacterEllipsis" />
+                                            </StackPanel>
+                                        </Button>
+                                        <Button Grid.Column="1" Click="OnRowDelete" Style="{StaticResource NoBrBtn}" Foreground="{StaticResource MonoMutBr}">
+                                            <TextBlock Text="&#xE74D;" FontFamily="Segoe MDL2 Assets" FontSize="13" />
+                                        </Button>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</Page>

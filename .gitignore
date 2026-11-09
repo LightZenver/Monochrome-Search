@@ -1,0 +1,18 @@
+bin/
+obj/
+out/
+*.appx
+*.appxbundle
+*.appxupload
+*.msix
+*.user
+*.suo
+.vs/
+.vscode/
+NuGet/
+
+# Локальные секреты
+*.pfx
+DOCS/
+signing/*.pem
+signing/*.key
