@@ -60,7 +60,23 @@ $pattern  = '(<Identity\s+Name="[^"]+"\s+Publisher="[^"]+"\s+Version=")[^"]+(")'
 $manifest = [regex]::Replace($manifest, $pattern, ('${1}' + $packageVersion + '${2}'))
 Set-Content -Path $manifestPath -Value $manifest -Encoding UTF8 -NoNewline
 
-# --- 3. Сборка -------------------------------------------------------------------
+# --- 3. Restore + сборка ---------------------------------------------------------
+# Классический UWP (project.json) восстанавливается nuget.exe, а не msbuild -t:Restore.
+
+$toolsDir = Join-Path $OutDir 'tools'
+if (-not (Test-Path $toolsDir)) { New-Item -ItemType Directory -Path $toolsDir | Out-Null }
+
+$nuget = (Get-Command nuget -ErrorAction SilentlyContinue).Source
+if (-not $nuget) {
+    $nuget = Join-Path $toolsDir 'nuget.exe'
+    if (-not (Test-Path $nuget)) {
+        Write-Host 'Скачиваем nuget.exe...'
+        Invoke-WebRequest -Uri 'https://dist.nuget.org/win-x86-commandline/latest/nuget.exe' -OutFile $nuget
+    }
+}
+
+& $nuget restore (Join-Path $PSScriptRoot '..\src\Monochrome.sln') -NonInteractive
+if ($LASTEXITCODE -ne 0) { throw "NuGet restore упал (код $LASTEXITCODE)." }
 
 $msbuild = &"${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" `
     -latest -requires Microsoft.Component.MSBuild -find "MSBuild\**\Bin\MSBuild.exe" `
@@ -71,7 +87,7 @@ Write-Host "MSBuild: $msbuild"
 
 & $msbuild (Join-Path $PSScriptRoot '..\src\Monochrome.sln') `
     -m `
-    -t:Restore,Build `
+    -t:Build `
     -p:"Configuration=$Configuration" `
     -p:"Platform=$Platform" `
     -p:'AppxPackageSigningEnabled=true' `
