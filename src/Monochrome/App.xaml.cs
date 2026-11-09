@@ -28,10 +28,6 @@ namespace Monochrome
                 Window.Current.Content = rootFrame;
 
                 SystemNavigationManager.GetForCurrentView().BackRequested += OnBackRequested;
-
-                Windows.UI.ViewManagement.StatusBar.GetForCurrentView().BackgroundColor = AppServices.Store.FromColor("MonoBgColor");
-                Windows.UI.ViewManagement.StatusBar.GetForCurrentView().BackgroundOpacity = 1;
-                Windows.UI.ViewManagement.StatusBar.GetForCurrentView().ForegroundColor = AppServices.Store.White;
             }
 
             if (rootFrame.Content == null)
@@ -77,7 +73,7 @@ namespace Monochrome
 
         private void OnSuspending(object sender, SuspendingEventArgs e)
         {
-            Store.Save();
+            AppServices.Store.Save();
         }
     }
 }

@@ -42,7 +42,13 @@ namespace Monochrome.AppServices
         };
 
         public sealed class Bookmark { public string Title { get; set; } public string Url { get; set; } }
-        public sealed class Shortcut { public string Title { get; set; } public string Url { get; set; } }
+        public sealed class Shortcut
+        {
+            public Shortcut() { }
+            public Shortcut(string title, string url) { Title = title; Url = url; }
+            public string Title { get; set; }
+            public string Url { get; set; }
+        }
         public sealed class HistoryItem { public string Title { get; set; } public string Url { get; set; } public double At { get; set; } }
 
         public sealed class State

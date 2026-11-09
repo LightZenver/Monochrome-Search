@@ -63,7 +63,7 @@ namespace Monochrome.Pages
 
             try
             {
-                Web.Navigate(Store.Route(url));
+                Web.Navigate(new Uri(Store.Route(url)));
                 if (addHistory) Store.AddHistory(url);
             }
             catch (Exception ex)
@@ -172,7 +172,7 @@ namespace Monochrome.Pages
             if (e.Key == Windows.System.VirtualKey.Enter)
             {
                 e.Handled = true;
-                AddressBox.Blur();
+                WebHost.Focus(FocusState.Programmatic);
                 CommitAddress();
             }
         }
@@ -252,8 +252,8 @@ namespace Monochrome.Pages
 
             var isUrl = t.StartsWith("http://", StringComparison.OrdinalIgnoreCase)
                      || t.StartsWith("https://", StringComparison.OrdinalIgnoreCase)
-                     || (!t.Contains(' ') && t.Contains('.') && t.Contains('/') && Uri.TryCreate("https://" + t, UriKind.Absolute, out Uri _))
-                     || (!t.Contains(' ') && HostLike(t) && Uri.TryCreate("https://" + t, UriKind.Absolute, out Uri _));
+                     || (!t.IndexOf(' ') >= 0 && t.IndexOf('.') >= 0 && t.IndexOf('/') >= 0 && Uri.TryCreate("https://" + t, UriKind.Absolute, out Uri _))
+                     || (!t.IndexOf(' ') >= 0 && HostLike(t) && Uri.TryCreate("https://" + t, UriKind.Absolute, out Uri _));
 
             if (isUrl)
             {
