@@ -1,0 +1,12 @@
+{
+	// Monochrome Gateway — прокси-воркер для Monochrome (браузер W10M).
+	// Совместимость на дату релиза воркера.
+	"name": "monochrome-gw",
+	"main": "src/index.ts",
+	"compatibility_date": "2025-11-30",
+	"compatibility_flags": ["nodejs_compat"],
+	"observability": {
+		"enabled": true,
+		"traces": { "enabled": true }
+	}
+}
