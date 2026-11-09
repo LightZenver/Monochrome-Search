@@ -133,21 +133,21 @@ function passthrough(upstream: Response): Response {
 // HTML
 // ------------------------------------------------------------------
 
-function remap(url: string | null, pageOrigin: string): string | undefined {
+function remap(url: string | null, gwOrigin: string): string | undefined {
 	if (!url) return undefined;
 	const t = url.trim();
 	if (!t || SKIP_RE.test(t)) return undefined;
-	if (/^https?:\/\//i.test(t)) return `${pageOrigin}/${t}`;
+	if (/^https?:\/\//i.test(t)) return `${gwOrigin}/${t}`;
 	return undefined; // относительные resolves via <base>
 }
 
-function remapSrcset(srcset: string, pageOrigin: string): string {
+function remapSrcset(srcset: string, gwOrigin: string): string {
 	return srcset.split(',').map((part) => {
 		const seg = part.trim();
 		if (!seg) return seg;
 		const sp = seg.indexOf(' ');
 		const url = sp < 0 ? seg : seg.slice(0, sp);
-		const mapped = remap(url, pageOrigin);
+		const mapped = remap(url, gwOrigin);
 		return mapped ? mapped + (sp < 0 ? '' : seg.slice(sp)) : seg;
 	}).join(', ');
 }
@@ -158,7 +158,6 @@ function rewriteHtml(upstream: Response, gwOrigin: string): Response {
 	// Реальный финальный URL — upstream.url после redirect: follow.
 	const pageUrl = upstream.url;
 	const page = new URL(pageUrl);
-	const pageOrigin = page.origin;
 
 	const dir = (page.pathname.slice(0, page.pathname.lastIndexOf('/') + 1)) || '/';
 	const baseHref = `${gwOrigin}/${page.protocol}//${page.host}${dir}`;
@@ -176,34 +175,34 @@ function rewriteHtml(upstream: Response, gwOrigin: string): Response {
 	rewriter.on('a', {
 		element(e) {
 			const v = e.getAttribute('href');
-			const m = remap(v, pageOrigin);
+			const m = remap(v, gwOrigin);
 			if (m) e.setAttribute('href', m);
 		},
 	});
 	rewriter.on('img', {
 		element(e) {
-			const m = remap(e.getAttribute('src'), pageOrigin);
+			const m = remap(e.getAttribute('src'), gwOrigin);
 			if (m) e.setAttribute('src', m);
 			const ss = e.getAttribute('srcset');
-			if (ss) e.setAttribute('srcset', remapSrcset(ss, pageOrigin));
+			if (ss) e.setAttribute('srcset', remapSrcset(ss, gwOrigin));
 		},
 	});
 	rewriter.on('link', {
 		element(e) {
-			const m = remap(e.getAttribute('href'), pageOrigin);
+			const m = remap(e.getAttribute('href'), gwOrigin);
 			if (m) e.setAttribute('href', m);
 		},
 	});
 	rewriter.on('iframe', {
 		element(e) {
-			const m = remap(e.getAttribute('src'), pageOrigin);
+			const m = remap(e.getAttribute('src'), gwOrigin);
 			if (m) e.setAttribute('src', m);
 		},
 	});
 	rewriter.on('source', {
 		element(e) {
 			const ss = e.getAttribute('srcset');
-			if (ss) e.setAttribute('srcset', remapSrcset(ss, pageOrigin));
+			if (ss) e.setAttribute('srcset', remapSrcset(ss, gwOrigin));
 		},
 	});
 	rewriter.on('head', {
