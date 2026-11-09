@@ -18,6 +18,25 @@ jobs:
       - name: MSBuild
         uses: microsoft/setup-msbuild@v2
 
+      - name: Диагностика окружения
+        shell: pwsh
+        run: |
+          $paths = @(
+            "${env:ProgramFiles(x86)}\Windows Kits\10\Platforms\UAP",
+            "${env:ProgramFiles(x86)}\Windows Kits\10\UnionMetadata\10.0.19041.0\UnionMetadata",
+            "${env:ProgramFiles(x86)}\Reference Assemblies\Microsoft\Framework\.NETCore",
+            "${env:ProgramFiles(x86)}\Microsoft SDKs\NETCore"
+          )
+          foreach ($p in $paths) {
+            if (Test-Path $p) { Write-Host "EXISTS: $p"; Get-ChildItem $p -ErrorAction SilentlyContinue | Select-Object -First 8 -ExpandProperty Name | Write-Host }
+            else { Write-Host "MISSING: $p" }
+          }
+          Write-Host "--- packages:"
+          if (Test-Path packages) { Get-ChildItem packages | Select-Object -ExpandProperty Name | Write-Host }
+          else { Write-Host 'NO packages dir (restore did not run?)' }
+          Write-Host "--- project.lock.json:"
+          Test-Path src/Monochrome/project.lock.json
+
       - name: Сборка и упаковка
         env:
           MONO_SIGN_PFX_B64: ${{ secrets.MONO_SIGN_PFX_B64 }}
