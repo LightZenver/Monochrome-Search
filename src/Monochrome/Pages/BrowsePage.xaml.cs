@@ -172,7 +172,10 @@ namespace Monochrome.Pages
             if (e.Key == Windows.System.VirtualKey.Enter)
             {
                 e.Handled = true;
-                WebHost.Focus(FocusState.Programmatic);
+                // Снятие фокуса с адресной строки без Blur(): перехват на скрытую кнопку.
+                BtnHomeHost.Visibility = Visibility.Visible;
+                BtnHomeHost.Focus(FocusState.Programmatic);
+                BtnHomeHost.Visibility = Visibility.Collapsed;
                 CommitAddress();
             }
         }
@@ -252,8 +255,8 @@ namespace Monochrome.Pages
 
             var isUrl = t.StartsWith("http://", StringComparison.OrdinalIgnoreCase)
                      || t.StartsWith("https://", StringComparison.OrdinalIgnoreCase)
-                     || (!t.IndexOf(' ') >= 0 && t.IndexOf('.') >= 0 && t.IndexOf('/') >= 0 && Uri.TryCreate("https://" + t, UriKind.Absolute, out Uri _))
-                     || (!t.IndexOf(' ') >= 0 && HostLike(t) && Uri.TryCreate("https://" + t, UriKind.Absolute, out Uri _));
+                     || (t.IndexOf(' ') < 0 && t.IndexOf('.') >= 0 && t.IndexOf('/') >= 0 && Uri.TryCreate("https://" + t, UriKind.Absolute, out Uri _))
+                     || (t.IndexOf(' ') < 0 && HostLike(t) && Uri.TryCreate("https://" + t, UriKind.Absolute, out Uri _));
 
             if (isUrl)
             {

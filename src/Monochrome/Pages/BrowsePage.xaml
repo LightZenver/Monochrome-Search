@@ -30,8 +30,10 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
+                <Button x:Name="BtnHomeHost" Grid.Column="4" Width="1" Height="1" MinWidth="1" MinHeight="1" Opacity="0" IsTabStop="False" Background="Transparent" BorderThickness="0" />
                 <Button x:Name="BtnBack" Grid.Column="0" Style="{StaticResource NoBrBtn}" Click="OnWebBack" Foreground="{StaticResource MonoFgBr}">
                     <TextBlock Text="&#xE72B;" FontFamily="Segoe MDL2 Assets" FontSize="16" />
                 </Button>
