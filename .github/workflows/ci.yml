@@ -22,14 +22,16 @@ jobs:
         shell: pwsh
         run: |
           $paths = @(
+            "${env:ProgramFiles(x86)}\Windows Kits\10\UnionMetadata",
+            "${env:ProgramFiles(x86)}\Windows Kits\10\Platforms",
             "${env:ProgramFiles(x86)}\Windows Kits\10\Platforms\UAP",
-            "${env:ProgramFiles(x86)}\Windows Kits\10\UnionMetadata\10.0.19041.0\UnionMetadata",
-            "${env:ProgramFiles(x86)}\Reference Assemblies\Microsoft\Framework\.NETCore",
-            "${env:ProgramFiles(x86)}\Microsoft SDKs\NETCore"
+            "${env:ProgramFiles(x86)}\Windows Kits\10\UnionMetadata\10.0.19041.0",
+            "${env:ProgramFiles(x86)}\Reference Assemblies\Microsoft\Framework\.NETCore"
           )
           foreach ($p in $paths) {
-            if (Test-Path $p) { Write-Host "EXISTS: $p"; Get-ChildItem $p -ErrorAction SilentlyContinue | Select-Object -First 8 -ExpandProperty Name | Write-Host }
-            else { Write-Host "MISSING: $p" }
+            Write-Host "=== $p"
+            if (Test-Path $p) { Get-ChildItem $p -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Name | Write-Host }
+            else { Write-Host "<нет>" }
           }
           Write-Host "--- packages:"
           if (Test-Path packages) { Get-ChildItem packages | Select-Object -ExpandProperty Name | Write-Host }
